@@ -18,7 +18,7 @@ import Link from "@/components/Links.vue";
 const store = mainStore();
 
 // 站点名称（移动端顶部大标题）
-const siteName = import.meta.env.VITE_SITE_NAME || "清沐の博客";
+const siteName = import.meta.env.VITE_SITE_NAME || "QingMu39";
 </script>
 
 <style lang="scss" scoped>

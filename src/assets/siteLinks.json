@@ -8,5 +8,15 @@
     "icon": "CompactDisc",
     "name": "清沐の歌单",
     "link": "https://music.163.com/playlist?id=13757047519"
+  },
+  {
+    "icon": "Fire",
+    "name": "PJSK表情生成",
+    "link": "https://qingmu39-gao.github.io/sekai-stickers/"
+  },
+  {
+    "icon": "LaptopCode",
+    "name": "工程转换",
+    "link": "https://qingmu39-gao.github.io/utaformatix3/"
   }
 ]

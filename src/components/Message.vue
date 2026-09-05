@@ -38,7 +38,7 @@ const store = mainStore();
 // 主页站点logo
 const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO;
 // 站点名称（大标题直接显示站点名）
-const siteName = import.meta.env.VITE_SITE_NAME || "清沐の博客";
+const siteName = import.meta.env.VITE_SITE_NAME || "QingMu39";
 
 // 简介区域文字
 const descriptionText = reactive({
@@ -139,6 +139,8 @@ watch(
         line-height: 2rem;
         margin-right: auto;
         transition: opacity 0.2s;
+        // 保留签名中的手动换行
+        white-space: pre-line;
 
         p {
           &:nth-of-type(1) {
