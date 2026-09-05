@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { getAdcode, getWeather, getOtherWeather, getGeoWeather } from "@/api";
+import { getAdcode, getWeather, getOtherWeather, getGeoWeather, getRegeo } from "@/api";
 import { Error } from "@icon-park/vue-next";
 
 // 高德开发者 Key
@@ -132,6 +132,52 @@ const applyFallback = async () => {
   }
 };
 
+// 浏览器 GPS 定位（优先于 IP 定位，更精确；用户拒绝则返回 null）
+const getBrowserLocation = () =>
+  new Promise((resolve) => {
+    if (!navigator.geolocation) return resolve(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) =>
+        resolve({
+          lng: pos.coords.longitude,
+          lat: pos.coords.latitude,
+        }),
+      () => resolve(null), // 拒绝授权或失败
+      { timeout: 6000, maximumAge: 10 * 60 * 1000 },
+    );
+  });
+
+// 定位城市（手动指定 > 浏览器定位 > 高德 IP）
+const locateCity = async (key) => {
+  // 1. 手动指定城市（VITE_WEATHER_CITY 填 adcode，如常州市 320400）
+  const manual = import.meta.env.VITE_WEATHER_CITY;
+  if (manual) {
+    return { adcode: manual, city: null };
+  }
+  // 2. 浏览器定位
+  const geo = await getBrowserLocation();
+  if (geo) {
+    try {
+      const regeo = await getRegeo(key, geo.lng, geo.lat);
+      const addr = regeo?.regeocode?.addressComponent;
+      if (regeo?.infocode === "10000" && addr?.adcode) {
+        return {
+          adcode: addr.adcode,
+          city: addr.district || addr.city || addr.province || null,
+        };
+      }
+    } catch (e) {
+      console.warn("逆地理编码失败，改用 IP 定位：", e);
+    }
+  }
+  // 3. 高德 IP 定位（兜底）
+  const ip = await getAdcode(key);
+  if (ip.infocode !== "10000" || !ip.adcode) {
+    throw new Error("高德地区查询失败");
+  }
+  return { adcode: ip.adcode, city: ip.city || null };
+};
+
 // 获取天气数据
 const getWeatherData = async () => {
   try {
@@ -141,24 +187,21 @@ const getWeatherData = async () => {
     } else {
       // 优先使用高德
       try {
-        const adCode = await getAdcode(mainKey);
-        console.log(adCode);
-        if (adCode.infocode !== "10000" || !adCode.adcode) {
-          throw new Error("高德地区查询失败");
-        }
-        weatherData.adCode = {
-          city: adCode.city,
-          adcode: adCode.adcode,
-        };
-        const result = await getWeather(mainKey, weatherData.adCode.adcode);
+        const loc = await locateCity(mainKey);
+        const result = await getWeather(mainKey, loc.adcode);
         if (!result?.lives?.[0]) {
           throw new Error("高德天气无数据");
         }
+        const lives = result.lives[0];
+        weatherData.adCode = {
+          city: loc.city || lives.city || lives.province || "未知地区",
+          adcode: loc.adcode,
+        };
         weatherData.weather = {
-          weather: result.lives[0].weather,
-          temperature: result.lives[0].temperature,
-          winddirection: result.lives[0].winddirection,
-          windpower: result.lives[0].windpower,
+          weather: lives.weather,
+          temperature: lives.temperature,
+          winddirection: lives.winddirection,
+          windpower: lives.windpower,
         };
       } catch (err) {
         console.warn("高德接口不可用，切换备用链：", err);
