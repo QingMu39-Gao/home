@@ -1,32 +1,20 @@
 [
   {
-    "name": "Github",
-    "icon": "/images/icon/github.png",
-    "tip": "Github(无原创)",
-    "url": "https://github.com/SYSKUKU"
-  },
-  {
     "name": "BiliBili",
     "icon": "/images/icon/bilibili.png",
-    "tip": "(゜-゜)つロ 干杯 ~",
-    "url": "https://space.bilibili.com/473348127"
+    "tip": "(゜-゜)つロ 干杯~",
+    "url": "https://space.bilibili.com/487092994"
   },
   {
     "name": "QQ",
     "icon": "/images/icon/qq.png",
-    "tip": "有什么事吗",
-    "url": "https://res.abeim.cn/api/qq/?qq=3176830442"
+    "tip": "来 QQ 找我玩",
+    "url": "https://qm.qq.com/q/XuiQGJLZyU"
   },
   {
     "name": "Email",
     "icon": "/images/icon/email.png",
     "tip": "来封 Email ~",
-    "url": "mailto:syskuku@imikufans.com"
-  },
-  {
-    "name": "Twitter",
-    "icon": "/images/icon/twitter.png",
-    "tip": "你懂的 ~",
-    "url": "https://twitter.com/SYSKUKU"
+    "url": "mailto:qingmu39mikufan@gmail.com"
   }
 ]

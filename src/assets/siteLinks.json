@@ -1,27 +1,12 @@
 [
   {
-    "icon": "Blog",
-    "name": "iMikufans博客",
-    "link": "https://blog.imikufans.com/"
-  },
-  {
-    "icon": "Cloud",
-    "name": "V家资源网盘",
-    "link": "https://voicebanks.imikufans.com"
-  },
-  {
     "icon": "Book",
-    "name": "VOCAKEY Wiki",
-    "link": "https://vocakey.imikufans.com"
+    "name": "初音未来是谁",
+    "link": "https://baike.baidu.com/item/%E5%88%9D%E9%9F%B3%E6%9C%AA%E6%9D%A5"
   },
   {
     "icon": "CompactDisc",
-    "name": "有为动漫社",
-    "link": "https://dms.imikufans.com/"
-  },
-  {
-    "icon": "Fire",
-    "name": "PJSK表情生成",
-    "link": "https://pjsk.imikufans.com/"
+    "name": "清沐の歌单",
+    "link": "https://music.163.com/playlist?id=13757047519"
   }
 ]
