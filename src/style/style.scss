@@ -44,11 +44,11 @@ a:hover {
 }
 
 // 字体文件
+// 使用完整版 Pacifico（-all），否则 q/u/g/n 等 Logo 子集外字母会回退默认字体
 @font-face {
   font-family: "Pacifico-Regular";
   font-display: swap;
-  // 相对路径：构建后 CSS 位于 /home/assets/ 下，../font/ 指向 /home/font/
-  src: url("../font/Pacifico-Regular.ttf") format("truetype");
+  src: url("../font/Pacifico-Regular-all.ttf") format("truetype");
 }
 
 @font-face {

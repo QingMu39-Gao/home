@@ -78,13 +78,13 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-// 中文字写体（马善政毛笔楷书，仅裁剪签名所需字符，24KB）
+// 中文字写体：霞鹜文楷 Lite（仅裁剪签名所需字符，体积约 20-40KB）
 @font-face {
-  font-family: "Ma Shan Zheng";
+  font-family: "LXGW WenKai";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/font/ma-shan-zheng-sign.woff2") format("woff2");
+  src: url("../assets/font/lxgw-wenkai-sign.woff2") format("woff2");
 }
 
 .message {
@@ -145,17 +145,19 @@ watch(
 
       .text {
         margin: 0.75rem 1rem;
-        line-height: 2rem;
+        line-height: 2.1rem;
         margin-right: auto;
         transition: opacity 0.2s;
         // 保留签名中的手动换行
         white-space: pre-line;
+        // 签名整体使用霞鹜文楷（LXGW WenKai）手写体
+        font-family: "LXGW WenKai", "Ma Shan Zheng", sans-serif;
+        font-size: 1.1rem;
 
         p {
           &:nth-of-type(1) {
-            // 手写体（含中文字形；无中文字形时回退 Pacifico/默认字体）
-            font-family: "Ma Shan Zheng", "Pacifico-Regular", sans-serif;
-            font-size: 1.35rem;
+            // Welcome 行略大
+            font-size: 1.3rem;
           }
         }
       }
