@@ -71,5 +71,32 @@ export const getWeather = async (key, city) => {
 // https://api.oioweb.cn/doc/weather/GetWeather
 export const getOtherWeather = async () => {
   const res = await fetch("https://api.oioweb.cn/api/weather/GetWeather");
-  return await res.json();
+  const data = await res.json();
+  // 接口返回结构异常时视为失败，交由备用链路处理
+  if (!data?.result?.condition) {
+    throw new Error("备用天气接口返回异常");
+  }
+  return data;
+};
+
+// 免 Key 备用：IP 定位 + Open-Meteo 天气（均支持 CORS，无需注册）
+export const getGeoWeather = async () => {
+  // 1. IP 定位
+  const geoRes = await fetch("https://ipwho.is/");
+  const geo = await geoRes.json();
+  if (!geo || geo.success !== true || !geo.latitude || !geo.longitude) {
+    throw new Error("IP 定位失败");
+  }
+  // 2. 获取天气
+  const res = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`,
+  );
+  const data = await res.json();
+  if (!data?.current_weather) {
+    throw new Error("天气服务无数据");
+  }
+  return {
+    city: geo.city || geo.country || "未知地区",
+    current_weather: data.current_weather,
+  };
 };

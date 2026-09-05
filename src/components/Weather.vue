@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { getAdcode, getWeather, getOtherWeather } from "@/api";
+import { getAdcode, getWeather, getOtherWeather, getGeoWeather } from "@/api";
 import { Error } from "@icon-park/vue-next";
 
 // 高德开发者 Key
@@ -50,25 +50,92 @@ const getTemperature = (min, max) => {
   }
 };
 
+// WMO 天气代码 -> 中文
+const weatherCodeMap = {
+  0: "晴",
+  1: "大致晴朗",
+  2: "多云",
+  3: "阴",
+  45: "雾",
+  48: "雾凇",
+  51: "毛毛雨",
+  53: "毛毛雨",
+  55: "毛毛雨",
+  56: "冻毛毛雨",
+  57: "冻毛毛雨",
+  61: "小雨",
+  63: "中雨",
+  65: "大雨",
+  66: "冻雨",
+  67: "冻雨",
+  71: "小雪",
+  73: "中雪",
+  75: "大雪",
+  77: "雪粒",
+  80: "阵雨",
+  81: "阵雨",
+  82: "强阵雨",
+  85: "阵雪",
+  86: "强阵雪",
+  95: "雷阵雨",
+  96: "雷阵雨伴冰雹",
+  99: "强雷暴伴冰雹",
+};
+
+// 风向角度 -> 中文方位
+const windDirMap = ["北", "东北", "东", "东南", "南", "西南", "西", "西北"];
+
+// 风速 km/h -> 风力等级（蒲福风级近似）
+const beaufort = (kmh) => {
+  const bounds = [2, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
+  let level = 0;
+  for (let i = 0; i < bounds.length; i++) {
+    if (kmh >= bounds[i]) level = i + 1;
+  }
+  return level;
+};
+
+// 解析免 Key 备用天气数据（ipwho.is + Open-Meteo）
+const parseGeoWeather = (data) => {
+  const cur = data.current_weather;
+  const idx = Math.round(cur.winddirection / 45) % 8;
+  return {
+    adCode: { city: data.city },
+    weather: {
+      weather: weatherCodeMap[cur.weathercode] || "未知",
+      temperature: String(Math.round(cur.temperature)),
+      winddirection: windDirMap[idx] + "风",
+      windpower: String(beaufort(cur.windspeed)),
+    },
+  };
+};
+
 // 获取天气数据
 const getWeatherData = async () => {
   try {
     // 获取地理位置信息
     if (!mainKey) {
-      console.log("未配置，使用备用天气接口");
-      const result = await getOtherWeather();
-      console.log(result);
-      const data = result.result;
-      weatherData.adCode = {
-        city: data.city.City || "未知地区",
-        // adcode: data.city.cityId,
-      };
-      weatherData.weather = {
-        weather: data.condition.day_weather,
-        temperature: getTemperature(data.condition.min_degree, data.condition.max_degree),
-        winddirection: data.condition.day_wind_direction,
-        windpower: data.condition.day_wind_power,
-      };
+      console.log("未配置 Key，使用备用天气接口");
+      let result;
+      try {
+        // 首选：教书先生
+        result = await getOtherWeather();
+        const data = result.result;
+        weatherData.adCode = {
+          city: data.city.City || "未知地区",
+        };
+        weatherData.weather = {
+          weather: data.condition.day_weather,
+          temperature: getTemperature(data.condition.min_degree, data.condition.max_degree),
+          winddirection: data.condition.day_wind_direction,
+          windpower: data.condition.day_wind_power,
+        };
+      } catch (err) {
+        console.warn("教书先生天气接口失败，切换 IP 定位天气：", err);
+        // 兜底：IP 定位 + Open-Meteo
+        const geo = await getGeoWeather();
+        Object.assign(weatherData, parseGeoWeather(geo));
+      }
     } else {
       // 获取 Adcode
       const adCode = await getAdcode(mainKey);
