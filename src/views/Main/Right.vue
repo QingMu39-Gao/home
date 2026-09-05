@@ -2,7 +2,7 @@
   <div :class="store.mobileOpenState ? 'right' : 'right hidden'">
     <!-- 移动端 Logo -->
     <div class="logo text-hidden" @click="store.mobileFuncState = !store.mobileFuncState">
-      <span class="bg">{{ siteName }}</span>
+      <span class="bg">{{ siteTitle }}</span>
     </div>
     <!-- 功能区 -->
     <Func />
@@ -17,8 +17,8 @@ import Func from "@/views/Func/index.vue";
 import Link from "@/components/Links.vue";
 const store = mainStore();
 
-// 站点名称（移动端顶部大标题）
-const siteName = import.meta.env.VITE_SITE_NAME || "QingMu39";
+// 大标题文字（移动端顶部）：优先取 VITE_SITE_URL，为空时退回站点名
+const siteTitle = import.meta.env.VITE_SITE_URL || import.meta.env.VITE_SITE_NAME || "qingmu39";
 </script>
 
 <style lang="scss" scoped>

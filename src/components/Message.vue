@@ -4,8 +4,8 @@
     <!-- Logo -->
     <div class="logo">
       <img class="logo-img" :src="siteLogo" alt="logo" />
-      <div :class="{ name: true, 'text-hidden': true, long: siteName.length >= 6 }">
-        <span class="bg">{{ siteName }}</span>
+      <div :class="{ name: true, 'text-hidden': true, long: siteTitle.length >= 6 }">
+        <span class="bg">{{ siteTitle }}</span>
       </div>
     </div>
     <!-- 简介 -->
@@ -37,8 +37,8 @@ const store = mainStore();
 
 // 主页站点logo
 const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO;
-// 站点名称（大标题直接显示站点名）
-const siteName = import.meta.env.VITE_SITE_NAME || "QingMu39";
+// 大标题文字：优先取 VITE_SITE_URL（qingmu39），为空时退回站点名
+const siteTitle = import.meta.env.VITE_SITE_URL || import.meta.env.VITE_SITE_NAME || "qingmu39";
 
 // 简介区域文字
 const descriptionText = reactive({
@@ -78,6 +78,15 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+// 中文字写体（马善政毛笔楷书，仅裁剪签名所需字符，24KB）
+@font-face {
+  font-family: "Ma Shan Zheng";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/font/ma-shan-zheng-sign.woff2") format("woff2");
+}
+
 .message {
   .logo {
     display: flex;
@@ -144,7 +153,9 @@ watch(
 
         p {
           &:nth-of-type(1) {
-            font-family: "Pacifico-Regular";
+            // 手写体（含中文字形；无中文字形时回退 Pacifico/默认字体）
+            font-family: "Ma Shan Zheng", "Pacifico-Regular", sans-serif;
+            font-size: 1.35rem;
           }
         }
       }
