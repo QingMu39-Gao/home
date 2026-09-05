@@ -1,6 +1,6 @@
 /**
  * 站点「一言」词库
- * 主题：术力口 / VOCALOID 为主，混合少量动漫、无畏契约、网络热梗
+ * 主题：术力口 / VOCALOID 为主，混合少量动漫、无畏契约内容
  * 想增删句子：直接在此数组添加 { text: "句子", from: "出处/分类" } 即可
  */
 export const hitokotoList = [
@@ -28,6 +28,21 @@ export const hitokotoList = [
   { text: "Synthesizer V 的 AI 音源太丝滑了，谁用谁知道。", from: "Synthesizer V" },
   { text: "调参一时爽，渲染火葬场 —— SV 人的日常。", from: "Synthesizer V" },
 
+  { text: "把音量调到最大，让电子歌姬唱给我听。", from: "术力口日常" },
+  { text: "VOCALOID 不用修音 —— 因为她们本身就很完美。", from: "术力口" },
+  { text: "《千本桜》副歌一响，DNA 就动了。", from: "术力口" },
+  { text: "熬夜调音的人，上辈子大概是…… P主。", from: "术力口日常" },
+  { text: "8月31日是初音ミク生誕祭，记得祝她生日快乐。", from: "术力口" },
+  { text: "电音、和声、消失的 P 主 —— 术力口三大未解之谜。", from: "术力口" },
+  { text: "只要戴上耳机，世界就是我的演唱会。", from: "术力口日常" },
+  { text: "听 VOCALOID 第 n 年，还是会被一句歌词击中。", from: "术力口" },
+  { text: "从《みくみくにしてあげる♪》开始，就回不了头了。", from: "术力口" },
+  { text: "《千本桜》《World is Mine》《メルト》—— 术力口入坑三件套。", from: "术力口" },
+  { text: "术力口浓度超标警告：请准备好 128G 歌单。", from: "术力口" },
+  { text: "洛天依、言和、乐正绫 —— 中文 VOCALOID 永远的神。", from: "中文V家" },
+  { text: "Synthesizer V 的中文 AI 声库，一年比一年惊艳。", from: "Synthesizer V" },
+  { text: "修音不如调参数 —— Synthesizer V 的颤音是真的好听。", from: "Synthesizer V" },
+
   // ---------- 动漫 ----------
   { text: "你已经死了。", from: "《北斗神拳》" },
   { text: "人被杀，就会死。", from: "《Fate/stay night》" },
@@ -51,24 +66,4 @@ export const hitokotoList = [
   { text: "队友报点：他残了！实际：满血战神。", from: "无畏契约日常" },
   { text: "枪法可以菜，皮肤必须帅。", from: "无畏契约" },
   { text: "赢一把就睡 —— 然后，天亮了。", from: "游戏玩家" },
-
-  // ---------- 网络热梗 ----------
-  { text: "人生无常，大肠包小肠。", from: "网络热梗" },
-  { text: "什么档次，跟我用一样的。", from: "网络热梗" },
-  { text: "你干嘛～哎哟～", from: "网络热梗" },
-  { text: "老铁，666！", from: "网络热梗" },
-  { text: "完了，芭比Q了。", from: "网络热梗" },
-  { text: "真的会谢。", from: "网络热梗" },
-  { text: "退！退！退！", from: "网络热梗" },
-  { text: "拿来吧你！", from: "网络热梗" },
-  { text: "你是我的神！", from: "网络热梗" },
-  { text: "家人们，谁懂啊。", from: "网络热梗" },
-  { text: "泰裤辣！", from: "网络热梗" },
-  { text: "显眼包竟是我自己。", from: "网络热梗" },
-  { text: "遥遥领先！", from: "网络热梗" },
-  { text: "泼天的富贵轮到我了？", from: "网络热梗" },
-  { text: "绷不住了。", from: "网络热梗" },
-  { text: "破防了，家人们。", from: "网络热梗" },
-  { text: "前方高能预警！", from: "网络热梗" },
-  { text: "雨女无瓜（与你无关）。", from: "网络热梗" },
 ];
