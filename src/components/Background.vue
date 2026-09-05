@@ -76,7 +76,8 @@ const imgLoadError = () => {
       fill: "#efefef",
     }),
   });
-  bgUrl.value = `/images/background${bgRandom}.jpg`;
+  // BASE_URL 兼容 GitHub Pages 子路径部署（生产 /home/，开发 /）
+  bgUrl.value = import.meta.env.BASE_URL + "images/background" + bgRandom + ".jpg";
 };
 
 // 监听壁纸切换

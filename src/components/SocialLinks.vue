@@ -10,7 +10,7 @@
         @mouseenter="socialTip = item.tip"
         @mouseleave="socialTip = '通过这里联系我吧'"
       >
-        <img class="icon" :src="item.icon" height="24" />
+        <img class="icon" :src="resolveIcon(item.icon)" height="24" />
       </a>
     </div>
     <span class="tip">{{ socialTip }}</span>
@@ -19,6 +19,16 @@
 
 <script setup>
 import socialLinks from "@/assets/socialLinks.json";
+
+// 图标路径以 / 开头时，拼接 BASE_URL（生产为 /home/）以兼容 GitHub Pages 子路径部署
+const resolveIcon = (icon) => {
+  if (!icon) return icon;
+  if (/^https?:\/\//.test(icon)) return icon;
+  if (icon.startsWith("/")) {
+    return import.meta.env.BASE_URL.replace(/\/+$/, "") + icon;
+  }
+  return icon;
+};
 
 // 社交链接提示
 const socialTip = ref("通过这里联系我吧");

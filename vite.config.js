@@ -11,6 +11,9 @@ import viteCompression from "vite-plugin-compression";
 // https://vitejs.dev/config/
 export default ({ mode }) =>
   defineConfig({
+    // GitHub Pages 部署：仓库名为 home，站点地址为 https://<user>.github.io/home/
+    // 因此生产构建使用子路径 base；本地开发仍使用根路径
+    base: mode === "development" ? "/" : "/home/",
     plugins: [
       vue(),
       AutoImport({
@@ -47,42 +50,44 @@ export default ({ mode }) =>
           short_name: loadEnv(mode, process.cwd()).VITE_SITE_NAME,
           description: loadEnv(mode, process.cwd()).VITE_SITE_DES,
           display: "standalone",
-          start_url: "/",
+          // 相对 manifest.webmanifest 的路径，兼容 /home/ 子路径部署
+          start_url: "./",
+          scope: "./",
           theme_color: "#424242",
           background_color: "#424242",
           icons: [
             {
-              src: "/images/icon/48.png",
+              src: "./images/icon/48.png",
               sizes: "48x48",
               type: "image/png",
             },
             {
-              src: "/images/icon/72.png",
+              src: "./images/icon/72.png",
               sizes: "72x72",
               type: "image/png",
             },
             {
-              src: "/images/icon/96.png",
+              src: "./images/icon/96.png",
               sizes: "96x96",
               type: "image/png",
             },
             {
-              src: "/images/icon/128.png",
+              src: "./images/icon/128.png",
               sizes: "128x128",
               type: "image/png",
             },
             {
-              src: "/images/icon/144.png",
+              src: "./images/icon/144.png",
               sizes: "144x144",
               type: "image/png",
             },
             {
-              src: "/images/icon/192.png",
+              src: "./images/icon/192.png",
               sizes: "192x192",
               type: "image/png",
             },
             {
-              src: "/images/icon/512.png",
+              src: "./images/icon/512.png",
               sizes: "512x512",
               type: "image/png",
             },
