@@ -28,8 +28,8 @@
 </template>
 
 <script setup>
-import { MusicMenu, Error } from "@icon-park/vue-next";
-import { getHitokoto } from "@/api";
+import { MusicMenu } from "@icon-park/vue-next";
+import { hitokotoList } from "@/assets/hitokoto";
 import { mainStore } from "@/store";
 import debounce from "@/utils/debounce.js";
 
@@ -44,23 +44,18 @@ const hitokotoData = reactive({
   from: "無名",
 });
 
-// 获取一言数据
+// 随机取一条本地词条（术力口主题）
+const pickOne = () =>
+  hitokotoList[Math.floor(Math.random() * hitokotoList.length)] || {
+    text: "这里应该显示一句话",
+    from: "無名",
+  };
+
+// 获取一言数据（本地词库随机，无需网络）
 const getHitokotoData = async () => {
-  try {
-    const result = await getHitokoto();
-    hitokotoData.text = result.hitokoto;
-    hitokotoData.from = result.from;
-  } catch (error) {
-    ElMessage({
-      message: "一言获取失败",
-      icon: h(Error, {
-        theme: "filled",
-        fill: "#efefef",
-      }),
-    });
-    hitokotoData.text = "这里应该显示一句话";
-    hitokotoData.from = "無名";
-  }
+  const item = pickOne();
+  hitokotoData.text = item.text;
+  hitokotoData.from = item.from;
 };
 
 // 更新一言数据
