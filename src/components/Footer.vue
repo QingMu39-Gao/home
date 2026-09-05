@@ -59,7 +59,8 @@ const siteIcp = ref(import.meta.env.VITE_SITE_ICP);
 const siteAuthor = ref(import.meta.env.VITE_SITE_AUTHOR);
 const siteUrl = computed(() => {
   const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "https://www.imsyy.top";
+  // 未配置域名时，作者链接指向站点首页本身
+  if (!url || !url.includes(".")) return import.meta.env.BASE_URL;
   // 判断协议前缀
   if (!url.startsWith("http://") && !url.startsWith("https://")) {
     return "//" + url;
