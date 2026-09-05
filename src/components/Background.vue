@@ -32,8 +32,8 @@ const bgUrl = ref(null);
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
 
-// 本地壁纸数量（public/images/wallpapers/wall-01.jpg ~ wall-14.jpg）
-const WALL_COUNT = 14;
+// 本地壁纸数量（public/images/wallpapers/wall-01.jpg ~ wall-10.jpg）
+const WALL_COUNT = 10;
 
 // 拼接本地壁纸地址（兼容 GitHub Pages 子路径）
 const wallUrl = (n) =>
