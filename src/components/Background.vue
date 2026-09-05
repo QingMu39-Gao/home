@@ -32,20 +32,32 @@ const bgUrl = ref(null);
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
 
-// 壁纸随机数
-// 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
-const bgRandom = Math.floor(Math.random() * 10 + 1);
+// 本地壁纸数量（public/images/wallpapers/wall-01.jpg ~ wall-15.jpg）
+const WALL_COUNT = 15;
+
+// 拼接本地壁纸地址（兼容 GitHub Pages 子路径）
+const wallUrl = (n) =>
+  import.meta.env.BASE_URL + "images/wallpapers/wall-" + String(n).padStart(2, "0") + ".jpg";
+
+// 随机壁纸
+const randomWall = () => wallUrl(Math.floor(Math.random() * WALL_COUNT) + 1);
+
+// 每日一图（按天轮换）
+const dailyWall = () => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - start) / 86400000);
+  return wallUrl((dayOfYear % WALL_COUNT) + 1);
+};
 
 // 更换壁纸链接
 const changeBg = (type) => {
-  if (type == 0) {
-    bgUrl.value = `https://blog.imikufans.com/wp-content/uploads/2024/01/111314989_p0.jpg`;
-  } else if (type == 1) {
-    bgUrl.value = "https://blog.imikufans.com/wp-content/uploads/2024/01/111314989_p0.jpg";
-  } else if (type == 2) {
-    bgUrl.value = "https://blog.imikufans.com/wp-content/uploads/2024/01/111314989_p0.jpg";
-  } else if (type == 3) {
-    bgUrl.value = "https://blog.imikufans.com/wp-content/uploads/2024/01/111314989_p0.jpg";
+  if (type == 1) {
+    // 每日一图：每天固定一张
+    bgUrl.value = dailyWall();
+  } else {
+    // 默认壁纸 / 随机风景 / 随机动漫：均从本地壁纸随机
+    bgUrl.value = randomWall();
   }
 };
 
@@ -76,8 +88,8 @@ const imgLoadError = () => {
       fill: "#efefef",
     }),
   });
-  // BASE_URL 兼容 GitHub Pages 子路径部署（生产 /home/，开发 /）
-  bgUrl.value = import.meta.env.BASE_URL + "images/background" + bgRandom + ".jpg";
+  // 本地壁纸加载失败时换一张本地壁纸重试
+  bgUrl.value = randomWall();
 };
 
 // 监听壁纸切换
