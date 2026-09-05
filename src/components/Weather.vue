@@ -110,51 +110,60 @@ const parseGeoWeather = (data) => {
   };
 };
 
+// 免 Key 备用链：教书先生 -> IP 定位 + Open-Meteo
+const applyFallback = async () => {
+  try {
+    console.log("尝试教书先生备用接口");
+    const result = await getOtherWeather();
+    const data = result.result;
+    weatherData.adCode = {
+      city: data.city.City || "未知地区",
+    };
+    weatherData.weather = {
+      weather: data.condition.day_weather,
+      temperature: getTemperature(data.condition.min_degree, data.condition.max_degree),
+      winddirection: data.condition.day_wind_direction,
+      windpower: data.condition.day_wind_power,
+    };
+  } catch (err) {
+    console.warn("教书先生天气接口失败，切换 IP 定位天气：", err);
+    const geo = await getGeoWeather();
+    Object.assign(weatherData, parseGeoWeather(geo));
+  }
+};
+
 // 获取天气数据
 const getWeatherData = async () => {
   try {
-    // 获取地理位置信息
     if (!mainKey) {
-      console.log("未配置 Key，使用备用天气接口");
-      let result;
+      // 未配置高德 Key：直接走备用链
+      await applyFallback();
+    } else {
+      // 优先使用高德
       try {
-        // 首选：教书先生
-        result = await getOtherWeather();
-        const data = result.result;
+        const adCode = await getAdcode(mainKey);
+        console.log(adCode);
+        if (adCode.infocode !== "10000" || !adCode.adcode) {
+          throw new Error("高德地区查询失败");
+        }
         weatherData.adCode = {
-          city: data.city.City || "未知地区",
+          city: adCode.city,
+          adcode: adCode.adcode,
         };
+        const result = await getWeather(mainKey, weatherData.adCode.adcode);
+        if (!result?.lives?.[0]) {
+          throw new Error("高德天气无数据");
+        }
         weatherData.weather = {
-          weather: data.condition.day_weather,
-          temperature: getTemperature(data.condition.min_degree, data.condition.max_degree),
-          winddirection: data.condition.day_wind_direction,
-          windpower: data.condition.day_wind_power,
+          weather: result.lives[0].weather,
+          temperature: result.lives[0].temperature,
+          winddirection: result.lives[0].winddirection,
+          windpower: result.lives[0].windpower,
         };
       } catch (err) {
-        console.warn("教书先生天气接口失败，切换 IP 定位天气：", err);
-        // 兜底：IP 定位 + Open-Meteo
-        const geo = await getGeoWeather();
-        Object.assign(weatherData, parseGeoWeather(geo));
+        console.warn("高德接口不可用，切换备用链：", err);
+        await applyFallback();
       }
-    } else {
-      // 获取 Adcode
-      const adCode = await getAdcode(mainKey);
-      console.log(adCode);
-      if (adCode.infocode !== "10000") {
-        throw "地区查询失败";
-      }
-      weatherData.adCode = {
-        city: adCode.city,
-        adcode: adCode.adcode,
-      };
-      // 获取天气信息
-      const result = await getWeather(mainKey, weatherData.adCode.adcode);
-      weatherData.weather = {
-        weather: result.lives[0].weather,
-        temperature: result.lives[0].temperature,
-        winddirection: result.lives[0].winddirection,
-        windpower: result.lives[0].windpower,
-      };
     }
   } catch (error) {
     console.error("天气信息获取失败:" + error);
